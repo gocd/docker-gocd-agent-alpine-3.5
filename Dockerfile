@@ -20,19 +20,18 @@
 FROM alpine:3.5
 MAINTAINER GoCD <go-cd-dev@googlegroups.com>
 
-ARG GOCD_VERSION="17.3.0"
-ARG DOWNLOAD_URL="https://download.gocd.io/binaries/17.3.0-4704/generic/go-agent-17.3.0-4704.zip"
-
-LABEL gocd.version=${GOCD_VERSION} \
+LABEL gocd.version="17.4.0" \
   description="GoCD agent based on alpine version 3.5" \
-  maintainer="GoCD <go-cd-dev@googlegroups.com>"
+  maintainer="GoCD <go-cd-dev@googlegroups.com>" \
+  gocd.full.version="17.4.0-4892" \
+  gocd.git.sha="ab17b819e73477a47401744fa64f64fda55c26e8"
 
-ADD ${DOWNLOAD_URL} /tmp/go-agent.zip
+ADD "https://download.gocd.io/experimental/binaries/17.4.0-4892/generic/go-agent-17.4.0-4892.zip" /tmp/go-agent.zip
 ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini-static-amd64 /usr/local/sbin/tini
 ADD https://github.com/tianon/gosu/releases/download/1.10/gosu-amd64 /usr/local/sbin/gosu
 
 # allow mounting ssh keys, dotfiles, and the go server config and data
-VOLUME /home/go /godata
+VOLUME /godata
 
 # force encoding
 ENV LANG=en_US.utf8
@@ -51,7 +50,7 @@ RUN \
   apk add --update-cache openjdk8-jre-base git mercurial subversion openssh-client bash && \
 # unzip the zip file into /go-agent, after stripping the first path prefix
   unzip /tmp/go-agent.zip -d / && \
-  mv go-agent-${GOCD_VERSION} /go-agent && \
+  mv go-agent-17.4.0 /go-agent && \
   rm /tmp/go-agent.zip
 
 ADD docker-entrypoint.sh /
